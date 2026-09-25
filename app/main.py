@@ -74,6 +74,7 @@ def update_ticket(
     ticket.description = ticket_data.description
     ticket.priority = ticket_data.priority
     ticket.category = ticket_data.category
+    ticket.status = ticket_data.status
 
     db.commit()
     db.refresh(ticket)
