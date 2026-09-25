@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.ticket import Ticket
-from app.schemas.ticket import TicketCreate, TicketUpdate
+from app.schemas.ticket import TicketCreate, TicketResponse, TicketUpdate
 
 
 router = APIRouter(
@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 
-@router.post("")
+@router.post("", response_model=TicketResponse)
 def create_ticket(
     ticket: TicketCreate,
     db: Session = Depends(get_db)
@@ -28,25 +28,20 @@ def create_ticket(
     db.commit()
     db.refresh(new_ticket)
 
-    return {
-        "message": "Ticket creado correctamente",
-        "ticket": new_ticket
-    }
+    return new_ticket
     
 
-@router.get("")
+@router.get("", response_model=list[TicketResponse])
 def get_tickets(
     db: Session = Depends(get_db)
 ):
     tickets = db.query(Ticket).all()
 
-    return {
-        "tickets": tickets
-    }
+    return tickets
     
     
     
-@router.get("/{ticket_id}")
+@router.get("/{ticket_id}", response_model=TicketResponse)
 def get_ticket(
     ticket_id: int,
     db: Session = Depends(get_db)
@@ -59,13 +54,11 @@ def get_ticket(
             detail="Ticket no encontrado"
         )
 
-    return {
-        "ticket": ticket
-    }
+    return ticket
     
     
 
-@router.put("/{ticket_id}")
+@router.put("/{ticket_id}", response_model=TicketResponse)
 def update_ticket(
     ticket_id: int,
     ticket_data: TicketUpdate,
@@ -88,10 +81,7 @@ def update_ticket(
     db.commit()
     db.refresh(ticket)
 
-    return {
-        "message": "Ticket actualizado correctamente",
-        "ticket": ticket
-    }
+    return ticket
     
     
     
