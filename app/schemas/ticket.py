@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class TicketPriority(str, Enum):
@@ -19,17 +19,40 @@ class TicketStatus(str, Enum):
 
 
 class TicketCreate(BaseModel):
-    title: str
-    description: str
+    title: str = Field(
+        min_length=5,
+        max_length=150
+    )
+
+    description: str = Field(
+        min_length=10
+    )
+
     priority: TicketPriority
-    category: str
+
+    category: str = Field(
+        min_length=3,
+        max_length=50
+    )
 
 
 class TicketUpdate(BaseModel):
-    title: str
-    description: str
+    title: str = Field(
+        min_length=5,
+        max_length=150
+    )
+
+    description: str = Field(
+        min_length=10
+    )
+
     priority: TicketPriority
-    category: str
+
+    category: str = Field(
+        min_length=3,
+        max_length=50
+    )
+
     status: TicketStatus
 
 
